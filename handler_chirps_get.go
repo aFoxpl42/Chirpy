@@ -19,6 +19,7 @@ func (cfg *apiConfig) handlerChirpsRetrieve(w http.ResponseWriter, r*http.Reques
 		chirps = append(chirps, Chirp{
 			ID: dbChirp.ID,
 			Body: dbChirp.Body,
+			AuthorID: dbChirp.AuthorID,
 		})
 	}
 	sort.Slice(chirps, func(i, j int) bool {
