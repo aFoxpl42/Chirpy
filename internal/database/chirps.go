@@ -10,6 +10,23 @@ type Chirp struct {
 	AuthorID int `json:"author_id"`
 }
 
+func (db *DB) DeleteChirp(chirpID int) (error) {
+	dbStructure, err := db.LoadDB()
+	if err != nil {
+		return err
+	}
+
+	delete(dbStructure.Chirps, chirpID)
+
+	err = db.WriteDB(dbStructure)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+
 func (db *DB) CreateChirp(body string, authorID int) (Chirp, error) {
 	dbStructure, err := db.LoadDB()
 	if err != nil {
