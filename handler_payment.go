@@ -1,9 +1,10 @@
 package main
 
 import (
-	"net/http"
 	"encoding/json"
+	"net/http"
 
+	"github.com/aFoxpl42/Chirpy/internal/auth"
 )
 
 func (cfg *apiConfig) handlerPayment(w http.ResponseWriter, r *http.Request) {
@@ -19,6 +20,16 @@ func (cfg *apiConfig) handlerPayment(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&params)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, "Couldn't decode parameters")
+		return
+	}
+
+	apiKey, err := auth.GetApiKey(r.Header)
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "Couldn't find ApiKey")
+		return
+	}
+	if apiKey != cfg.polkaKey {
+		respondWithError(w, http.StatusUnauthorized, "Wrong ApiKey")
 		return
 	}
 
